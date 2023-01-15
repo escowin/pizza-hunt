@@ -20,22 +20,22 @@ function getPizza() {
   fetch(`/api/pizzas/${pizzaId}`)
     .then((response) => {
       if (!response.ok) {
-        throw new Error({ message: 'something is wrong' });
+        throw new Error({ message: "something is wrong" });
       }
       // console.log(response);
       return response.json();
     })
     .then(printPizza)
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
-      alert('pizza does not exist, returning to previous page');
+      alert("pizza does not exist, returning to previous page");
       // caveat | browser session needs a previous page to send user back.
       window.history.back();
     });
 }
 
 function printPizza(pizzaData) {
-  console.log(pizzaData);
+  // console.log(pizzaData);
 
   pizzaId = pizzaData._id;
 
@@ -128,26 +128,26 @@ function handleNewCommentSubmit(event) {
   const formData = { commentBody, writtenBy };
 
   fetch(`/api/comments/${pizzaId}`, {
-    method: 'post',
+    method: "post",
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(formData)
+    body: JSON.stringify(formData),
   })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('js:140 something is wrong');
-    }
-    response.json();
-  })
-  .then(commentResponse => {
-    console.log(commentResponse);
-    location.reload();
-  })
-  .catch(err => {
-    console.log(err);
-  });
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("js:140 something is wrong");
+      }
+      response.json();
+    })
+    .then((commentResponse) => {
+      console.log(commentResponse);
+      location.reload();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
 function handleNewReplySubmit(event) {
@@ -167,6 +167,28 @@ function handleNewReplySubmit(event) {
   }
 
   const formData = { writtenBy, replyBody };
+
+  fetch(`api/comments/${pizzaId}/${commentId}`, {
+    method: "put",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(formData),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Something is wrong");
+      }
+      response.json();
+    })
+    .then((commentResponse) => {
+      console.log(commentResponse);
+      location.reload();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 }
 
 $backBtn.addEventListener("click", function () {

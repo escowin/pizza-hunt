@@ -1,14 +1,57 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model, Types } = require("mongoose");
+const dateFormat = require("../utils/dateFormat");
 
-const CommentSchema = new Schema({
+// subdocument array for comments
+const ReplySchema = new Schema(
+  {
+    // fields
+    replyId: {
+      type: Schema.Types.ObjectId,
+      default: () => new Types.ObjectId(),
+    },
+    replyBody: { type: String },
+    writtenBy: { type: String },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+      get: (createdAtVal) => dateFormat(createdAtVal),
+    },
+  },
+  {
+    toJSON: {
+      getters: true,
+    },
+  }
+);
+
+const CommentSchema = new Schema(
+  {
+    // fields
     writtenBy: { type: String },
     commentBody: { type: String },
     createdAt: {
-        type: Date,
-        default: Date.now
-    }
+      type: Date,
+      default: Date.now,
+      get: (createdAtVal) => dateFormat(createdAtVal),
+    },
+    // this field associates replies with comments. uses replayschema to validate data for a reply
+    replies: [ReplySchema],
+  },
+  {
+    toJSON: {
+      // virtual gets total reply count. combines reply & comment count to get full picture of pizza discussion.
+      virtuals: true,
+      getters: true,
+    },
+    id: false,
+  }
+);
+
+// virtual | gets the total reply count
+CommentSchema.virtual('replyCount').get(function() {
+    return this.replies.length;
 });
 
-const Comment = model('Comment', CommentSchema);
+const Comment = model("Comment", CommentSchema);
 
 module.exports = Comment;
