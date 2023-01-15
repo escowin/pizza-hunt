@@ -5,9 +5,15 @@ const PizzaSchema = new Schema(
   {
     pizzaName: {
       type: String,
+      // validation & whitespace removal
+      required: true,
+      trim: true
     },
     createdBy: {
       type: String,
+      // validation & whitespace removal
+      required: true,
+      trim: true
     },
     createdAt: {
       type: Date,
@@ -17,6 +23,9 @@ const PizzaSchema = new Schema(
     },
     size: {
       type: String,
+      // validation | enumerates through the size array. prevents user from posting custom sizes
+      required: true,
+      enum: ['Personal', 'Small', 'Medium', 'Extra large'],
       default: "Large",
     },
     toppings: [],

@@ -44,9 +44,11 @@ const pizzaController = {
       .then((dbPizzaData) => res.json(dbPizzaData))
       .catch((err) => res.json(err));
   },
+
   // - update | PUT /api/pizzas:id | parameter { new: true } is needed to return new version of document
   updatePizza({ params, body }, res) {
-    Pizza.findOneAndUpdate({ _id: params.id }, body, { new: true })
+    // runValidators | validation applied to pizza details updates
+    Pizza.findOneAndUpdate({ _id: params.id }, body, { new: true, runValidators: true })
       .then((dbPizzaData) => {
         if (!dbPizzaData) {
           res.status(404).json({ message: "pizza does not exist" });
