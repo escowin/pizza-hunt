@@ -5,6 +5,12 @@ const pizzaController = {
   // - read | GET /api/pizzas | equivalent to Sequelize .findAll()
   getAllPizza(req, res) {
     Pizza.find({})
+      .populate({
+        path: 'comments',
+        select: '-__v', // - sign tells mongoose to not return the comment's __v field.
+      })
+      .select('-__v') // mongoose will not return the pizza's __v field as well.
+      .sort({ _id: -1 }) // DESC order, newest pizza at the top of the list
       .then((dbPizzaData) => res.json(dbPizzaData))
       .catch((err) => {
         console.log(err);
@@ -14,6 +20,11 @@ const pizzaController = {
   // - read | GET /api/pizzas:id | destructured params out of req object bc it's the only data needed for request
   getPizzaById({ params }, res) {
     Pizza.findOne({ _id: params.id })
+      .populate({
+        path: 'comments',
+        select: '-__v'
+      })
+      .select('-__v')
       .then((dbPizzaData) => {
         if (!dbPizzaData) {
           res.status(404).json({ message: "pizza does not exist" });
