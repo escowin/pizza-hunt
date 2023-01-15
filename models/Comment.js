@@ -9,8 +9,16 @@ const ReplySchema = new Schema(
       type: Schema.Types.ObjectId,
       default: () => new Types.ObjectId(),
     },
-    replyBody: { type: String },
-    writtenBy: { type: String },
+    replyBody: { 
+      type: String,
+      required: true,
+      trim: true
+    },
+    writtenBy: { 
+      type: String,
+      required: true,
+      trim: true
+    },
     createdAt: {
       type: Date,
       default: Date.now,
@@ -27,8 +35,16 @@ const ReplySchema = new Schema(
 const CommentSchema = new Schema(
   {
     // fields
-    writtenBy: { type: String },
-    commentBody: { type: String },
+    writtenBy: { 
+      type: String,
+      required: true,
+      trim: true
+    },
+    commentBody: {
+      type: String,
+      required: true,
+      trim: true
+    },
     createdAt: {
       type: Date,
       default: Date.now,
